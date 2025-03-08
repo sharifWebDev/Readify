@@ -27,7 +27,11 @@ Make sure you have the following installed:
 ### Step 1: Clone the Repository
 ```bash
 git clone https://github.com/sharifWebDev/Readify.git
+```
+
+```bash
 cd Readify
+```
 
 ### How to run
 open browser and open browser in project index file
@@ -35,13 +39,21 @@ open browser and open browser in project index file
 
 ### How to manage project git 
 --add change--
+```bash
 git add .
+```
 
---commit change---
+commit change
+
+```bash
 git commit -m "Yout change name"
+```
 
 --push change to branch name--
+
+```bash
 git push origin develop
+```
 
 
 
