@@ -2,7 +2,7 @@
 // File: config/Database.php
 class Database {
     private $host = 'localhost';
-    private $db = 'your_db';
+    private $db = 'readify';
     private $user = 'root';
     private $pass = '';
     private $conn;
@@ -13,7 +13,7 @@ class Database {
             if ($this->conn->connect_error) {
                 die("Connection failed: " . $this->conn->connect_error);
             }
-            $this->conn->autocommit(false); // Ensure ACID support
+            $this->conn->autocommit(false);
         }
         return $this->conn;
     }
