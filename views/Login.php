@@ -2,8 +2,12 @@
 <!-- // File: views/login.php -->
 <?php session_start(); ?>
 <!DOCTYPE html>
-<html>
-<head><title>Admin Login</title></head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Readify | Best Online Library Management System (LMS) with Subscription</title>
+</head>
 <body>
 <h2>Admin Login</h2>
 <?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
