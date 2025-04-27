@@ -34,9 +34,34 @@ class AuthController extends Controller {
             
         }
     }
- 
 
-    //logout
+    public function adminRegister() {
+        
+        return $this->view('Register');
+    }
+
+    public function register() {
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && CSRF::validateToken($_POST['token'])) {
+             
+            $admin = new Admin();
+             
+            $admin->setUsername(trim($_POST['username']));
+            $admin->setEmail(trim($_POST['email']));
+            $admin->setPassword(trim($_POST['password']));
+            
+            try { 
+                if ($admin->register()) { 
+                    return $this->redirect('/users');
+                }
+            } catch (Exception $e) { 
+                $_SESSION['error_message'] = $e->getMessage();
+            }
+        }
+    }
+    
+ 
+ 
     public function logout() {
 
         session_destroy();

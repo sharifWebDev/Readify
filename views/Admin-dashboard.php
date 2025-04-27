@@ -1,33 +1,21 @@
 <?php
 require_once 'layouts/page-header.php';
+
+    if (!isset($_SESSION['admin'])) {
+        header('Location: /login');
+        exit;
+    }
+    require_once 'layouts/navbar.php';
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-success bg-success px-4">
-    <a class="navbar-brand" href="#">📘 Readify Admin</a>
-    <div class="ms-auto">
-        <span class="navbar-text text-white me-3">
-            Welcome, <?= htmlspecialchars($_SESSION['admin']->email) ?>
-        </span>
-        <form action="/logout" method="POST" class="d-inline">
-            <input type="hidden" name="token" value="<?= CSRF::getToken() ?>">
-            <button type="submit" class="btn btn-outline-light">Logout</button>
-        </form>  
-    </div>
-    fjdshf
-</nav>
+
 
 <div class="container-fluid mt-4">
     <div class="row mt-4">
         <!-- Sidebar -->
-        <div class="col-md-3">
-            <div class="list-group bg-white">
-                <a href="/dashboard" class="list-group-item list-group-item-action active">🏠 Dashboard</a>
-                <a href="/books" class="list-group-item list-group-item-action">📚 Manage Books</a>
-                <a href="/members" class="list-group-item list-group-item-action">👤 Manage Members</a>
-                <a href="/subscriptions" class="list-group-item list-group-item-action">💳 Manage Subscriptions</a>
-                <a href="/admin-logs" class="list-group-item list-group-item-action">📝 Admin Logs</a>
-            </div>
-        </div>
+        <?php
+        require_once 'layouts/sidebar.php';
+        ?>
 
         <!-- Content Area -->
         <div class="col-md-9">

@@ -2,12 +2,8 @@
 // File: routes/web.php
 
 require_once '../controllers/AuthController.php';
-require_once '../core/CSRF.php';
-require_once '../core/AuthCheck.php';
-
-(new AuthCheck());
+require_once '../core/CSRF.php'; 
  
-
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 $publicPos = strpos($path, '/public/');
@@ -54,6 +50,16 @@ if ($rootPath === '/login' && $_SERVER['REQUEST_METHOD'] === 'POST')
 if ($rootPath === '/logout' && $_SERVER['REQUEST_METHOD'] === 'POST') 
 {
     $auth->logout();
+}
+
+if ($rootPath === '/register' && $_SERVER['REQUEST_METHOD'] === 'GET') 
+{
+    $auth->adminRegister();
+}
+
+if ($rootPath === '/register' && $_SERVER['REQUEST_METHOD'] === 'POST') 
+{
+    $auth->register();
 }
 
 if ($rootPath === '/admin-dashboard') 
