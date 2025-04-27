@@ -1,19 +1,6 @@
-<!-- File: views/dashboard.php -->
-<?php 
-if (!isset($_SESSION['admin'])) {
-    header("Location: /");
-    exit;
-}
+<?php
+require_once 'layouts/page-header.php';
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin Dashboard - Readify</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body style="background-color: #f4f6f9;">
 
 <nav class="navbar navbar-expand-lg navbar-success bg-success px-4">
     <a class="navbar-brand" href="#">📘 Readify Admin</a>
@@ -21,15 +8,19 @@ if (!isset($_SESSION['admin'])) {
         <span class="navbar-text text-white me-3">
             Welcome, <?= htmlspecialchars($_SESSION['admin']->email) ?>
         </span>
-        <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+        <form action="/logout" method="POST" class="d-inline">
+            <input type="hidden" name="token" value="<?= CSRF::getToken() ?>">
+            <button type="submit" class="btn btn-outline-light">Logout</button>
+        </form>  
     </div>
+    fjdshf
 </nav>
 
 <div class="container-fluid mt-4">
-    <div class="row">
+    <div class="row mt-4">
         <!-- Sidebar -->
         <div class="col-md-3">
-            <div class="list-group bg-white"  style="min-height: 88vh;">
+            <div class="list-group bg-white">
                 <a href="/dashboard" class="list-group-item list-group-item-action active">🏠 Dashboard</a>
                 <a href="/books" class="list-group-item list-group-item-action">📚 Manage Books</a>
                 <a href="/members" class="list-group-item list-group-item-action">👤 Manage Members</a>
@@ -40,7 +31,7 @@ if (!isset($_SESSION['admin'])) {
 
         <!-- Content Area -->
         <div class="col-md-9">
-            <div class="card shadow-sm" style="min-height: 88vh;">
+            <div class="card shadow-sm">
                 <div class="card-body">
                     <h4 class="card-title mb-4">📊 Admin Dashboard</h4> 
                     <div class="row">
@@ -74,15 +65,14 @@ if (!isset($_SESSION['admin'])) {
                             </div>
                         </div>
                     </div>
- 
-                    <a href="/admin-logs" class="btn btn-outline-secondary bottom-0">View Admin Logs</a>
+
+                    <a href="/admin-logs" class="btn btn-outline-secondary mt-3">View Admin Logs</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Bootstrap JS Bundle (Optional for interactivity) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?php
+require_once 'layouts/page-footer.php';
+?>

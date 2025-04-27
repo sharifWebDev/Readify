@@ -1,20 +1,24 @@
 <?php
-// File: config/Database.php
+
 class Database {
-    private $host = 'localhost';
-    private $db = 'readify';
-    private $user = 'root';
-    private $pass = '';
-    private $conn;
+    public $pdo;
 
     public function connect() {
-        if (!$this->conn) {
-            $this->conn = new mysqli($this->host, $this->user, $this->pass, $this->db);
-            if ($this->conn->connect_error) {
-                die("Connection failed: " . $this->conn->connect_error);
-            }
-            $this->conn->autocommit(false);
+        $host = 'localhost';        // Server name
+        $db = 'readify';         // Database name
+        $user = 'root';             // Database user
+        $pass = '';                 // Database password (XAMPP default is empty)
+        $charset = 'utf8mb4';       // Character encoding
+
+        // DSN (Data Source Name) for PDO connection
+        $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+
+        // Attempt to connect
+        try {
+            $this->pdo = new PDO($dsn, $user, $pass);
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  // Enable error reporting
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());  // Simple error message and exit
         }
-        return $this->conn;
     }
 }

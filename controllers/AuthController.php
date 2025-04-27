@@ -6,28 +6,45 @@ require_once '../config/DatabaseSeeder.php';
 require_once '../models/Admin.php';
 
 class AuthController extends Controller {
-    public function login() {
-        //check already login
-        if (isset($_SESSION['admin'])) {
-            return $this->view('Admin-dashboard');
-        }
+
+    public function adminLogin() {
         
+        return $this->view('Login');
+    }
+
+    public function login() {
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && CSRF::validateToken($_POST['token'])) {
+
             $admin = new Admin();
+
             $admin->setEmail($_POST['email']);
+
             $admin->setPassword($_POST['password']);
     
             if ($admin->login()) {
-                return $this->view('Admin-dashboard');
+
+                return $this->redirect('/admin-dashboard');
+
                 exit;
-            } else {
-                $this->view('Login', ['error' => 'Invalid credentials.']);
+
             }
-        } else {
-            return $this->view('Login');
+            
+            return $this->view('Login', ['error' => 'Invalid credentials.']);
+            
         }
     }
-    
+ 
+
+    //logout
+    public function logout() {
+
+        session_destroy();
+
+        return $this->view('Login');
+
+        exit;
+    }
 
     public function page($name)
     {
@@ -35,11 +52,7 @@ class AuthController extends Controller {
     }
 
     public function dashboard() {
-        if (!isset($_SESSION['admin'])) {
-            header("Location: /");
-            exit;
-        }
-        $this->view('dashboard');
+        return $this->view('Admin-Dashboard', ['success' => 'You are logged in.']);
     }
 
     public function findDb()
@@ -79,7 +92,7 @@ class AuthController extends Controller {
             $this->dbSeed();
             
         $message = urlencode('✅ Setup completed successfully!');
-        $this->view('login', ['success' => $message]);
+        header("Location: /login?message=$message");
 
         } catch (PDOException $e) {
             echo "Error creating database operations: " . $e->getMessage();

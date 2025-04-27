@@ -1,6 +1,5 @@
 <?php
 
-require_once '../config/Database.php';
 require_once '../core/Model.php';
 
 class Admin extends Model {
@@ -17,11 +16,10 @@ class Admin extends Model {
 
     public function login() {
         try {
-            $stmt = $this->db->prepare("SELECT id, email, password, email FROM admins WHERE email = ?");
-            $stmt->bind_param("s", $this->email);
+            $stmt = $this->db->prepare("SELECT id, email, password FROM admins WHERE email = :email");
+            $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
             $stmt->execute();
-            $result = $stmt->get_result();
-            $admin = $result->fetch_object();
+            $admin = $stmt->fetch(PDO::FETCH_OBJ);
 
             if ($admin && password_verify($this->password, $admin->password)) {
                 $_SESSION['admin'] = $admin;
@@ -29,7 +27,7 @@ class Admin extends Model {
             }
 
             return false;
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             error_log($e->getMessage());
             return false;
         }
