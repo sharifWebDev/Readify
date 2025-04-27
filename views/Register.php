@@ -21,35 +21,39 @@ require_once 'layouts/page-header.php';
 
         <!-- Content Area -->
         <div class="col-md-9">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    
-                <h3 class="text-center mb-4">📚 Readify</h3>
-                <h6 class="text-center mb-4">Admin Registration</h6>
-
-                <!-- Display error message if any -->
+            <div class="card">
+                <div class="card-body"> 
+                <h6 class="mb-4">Admin Registration</h6>
+ 
                 <?php if (!empty($error)): ?>
                     <div class="alert alert-danger" role="alert">
                         <?= htmlspecialchars($error); ?>
                     </div>
                 <?php endif; ?>
-
-                <!-- Registration Form -->
+ 
                 <form id="registrationForm" method="POST" >
-                <input type="hidden" name="token" value="<?= CSRF::generateToken(); ?>">
-                    <div class="mb-3">
-                        <input type="text" name="username" placeholder="Username" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <input type="email" name="email" placeholder="Email" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <input type="password" name="password" placeholder="Password" class="form-control" required>
-                    </div>
-                    
+                    <input type="hidden" name="token" value="<?= CSRF::generateToken(); ?>">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="mb-3">
+                                 <input type="text" name="username" placeholder="Username" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="mb-3">
+                            <input type="email" name="email" placeholder="Email" class="form-control" required>
+                            </div>
+                        </div>
 
-                    <!-- Submit Button -->
-                    <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="mb-3">
+                                <input type="password" name="password" placeholder="Password" class="form-control" required>
+                            </div>
+                        </div>
+
+                    </div>
+                     
+                    <button type="submit" class="btn text-white bg-info mt-3">  Register</button>
                 </form>
       
  

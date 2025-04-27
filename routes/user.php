@@ -17,7 +17,4 @@ if ($path === '/users' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $userController->update();
 } elseif ($path === '/users/delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $userController->destroy();
-} else {
-    http_response_code(404);
-    echo "404 Not Found";
 }

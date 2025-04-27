@@ -16,6 +16,25 @@
             border-radius: 1rem;
             padding: 2rem;
         }
+
+        .bg-info,  .list-group-item.active {
+            background-color:rgb(19, 11, 73) !important;
+        }
+ 
     </style>
 </head>
 <body>
+
+
+<?php
+
+require_once __DIR__ . '/../../core/MakeUrl.php';
+
+$url = new MakeUrl();
+
+if (!isset($_SESSION['admin'])) {
+    header('Location: /login');
+    exit;
+}
+
+?>

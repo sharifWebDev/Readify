@@ -59,6 +59,16 @@ class AuthController extends Controller {
             }
         }
     }
+
+
+    public function users() {
+
+        $admin = new Admin();
+
+        $users = $admin->getUsers();
+
+        return $this->view('Users', ['users' => $users]);
+    }
     
  
  

@@ -3,6 +3,7 @@
 require_once '../core/Model.php';
 
 class Admin extends Model {
+
     private $email;
     private $password;
     private $username;
@@ -92,6 +93,23 @@ class Admin extends Model {
         } catch (Exception $e) {
             error_log($e->getMessage());
             throw new Exception($e->getMessage());
+        }
+    }
+
+    public function getUsers() {
+        try {
+
+            $stmt = $this->db->prepare("SELECT id, email, username, verified_at FROM admins");
+
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        } catch (PDOException $e) {
+
+            error_log($e->getMessage());
+            
+            return [];
         }
     }
 }

@@ -35,7 +35,7 @@ if ($rootPath === '/' && $_SERVER['REQUEST_METHOD'] === 'GET')
 if ($rootPath === '/' && $_SERVER['REQUEST_METHOD'] === 'GET') 
 {
     $auth->dashboard();
-} 
+}
 
 if ($rootPath === '/login' && $_SERVER['REQUEST_METHOD'] === 'GET') 
 {
@@ -62,6 +62,11 @@ if ($rootPath === '/register' && $_SERVER['REQUEST_METHOD'] === 'POST')
     $auth->register();
 }
 
+if ($rootPath === '/users' && $_SERVER['REQUEST_METHOD'] === 'GET') 
+{
+    $auth->users();
+}
+
 if ($rootPath === '/admin-dashboard') 
 { 
     $auth->dashboard();
@@ -71,7 +76,8 @@ if ($rootPath === '/db-setup' && $_SERVER['REQUEST_METHOD'] === 'POST')
 {
     $auth->setupDb();
 }
- 
-http_response_code(404);
-echo "404 Not Found";
+  
+if (http_response_code() === 404) {
+    echo "404 Not Found";
+}
  
