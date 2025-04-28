@@ -1,10 +1,5 @@
 <?php
 require_once 'layouts/page-header.php';
-
-if (isset($_SESSION['admin'])) {
-    header('Location: /dashboard');
-    exit;
-}
 ?>
 
 <div class="container-fluid login-wrapper d-flex justify-content-center align-items-center">

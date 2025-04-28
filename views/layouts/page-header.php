@@ -33,7 +33,12 @@ require_once __DIR__ . '/../../core/MakeUrl.php';
 $url = new MakeUrl();
 
 if (!isset($_SESSION['admin'])) {
-    header('Location: /login');
+    echo $url->url('login');
+    exit;
+}
+
+if (isset($_SESSION['admin'])) {
+    echo $url->url('admin-dashboard');
     exit;
 }
 

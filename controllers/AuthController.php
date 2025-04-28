@@ -8,8 +8,13 @@ require_once '../models/Admin.php';
 class AuthController extends Controller {
 
     public function adminLogin() {
-        
-        return $this->view('Login');
+
+         $this->redirect('/login');
+    }
+
+    public function loginPage() {
+
+          $this->view('Login');
     }
 
     public function login() {
@@ -81,10 +86,7 @@ class AuthController extends Controller {
         exit;
     }
 
-    public function page($name)
-    {
-        return $this->view($name);
-    }
+   
 
     public function dashboard() {
         return $this->view('Admin-Dashboard', ['success' => 'You are logged in.']);

@@ -3,30 +3,30 @@
 // File: core/Controller.php
 
 abstract class Controller {
+
     protected function view($view, $data = []) {
         extract($data);
         require_once "../views/{$view}.php";
     }
 
-protected function redirect($url = '') {
-    session_write_close();
+    protected function redirect($path = '') {
+        session_write_close();
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+            
+        $host = $_SERVER['HTTP_HOST'];
     
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+        $scriptDir = rtrim(str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']), '/');
     
-    $baseUrl = $protocol . '://' . $_SERVER['HTTP_HOST'];
-     
-    $currentPath = $_SERVER['REQUEST_URI'];
-     
-    if ($url) {
-        $newUrl = $baseUrl . '/readify/public' . $url;
-    } else {
-        $newUrl = $baseUrl . $currentPath;
+        $baseUrl = $protocol . $host . $scriptDir;
+    
+        $baseUrl = rtrim($baseUrl, '/');
+        
+        $path = ltrim($path, '/');
+       
+        // return $baseUrl . '/' . $path;
+
+        header("Location: {$baseUrl}/{$path}");
+        exit;
     }
-
-    // Redirect to the new URL
-    header("Location: {$newUrl}");
-    exit;
-}
-
-    
+   
 }
