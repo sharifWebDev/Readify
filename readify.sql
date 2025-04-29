@@ -109,7 +109,7 @@ CREATE TABLE payments (
     total_due_amount DECIMAL(10,2) DEFAULT 0,
     paid_amount DECIMAL(10,2) NOT NULL,
     total_paid_amount DECIMAL(10,2) NOT NULL,
-    payment_status ENUM('success', 'failed') NOT NULL,
+    payment_status VARCHAR('50') NOT NULL, 
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
