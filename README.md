@@ -62,28 +62,11 @@ git commit -m "Yout change name"
 git push origin develop
 ```
 
-File structure
+# Admin Login App
 
-admin-login-app/
-├── config/
-│ └── Database.php
-├── core/
-│ ├── Controller.php
-│ ├── Model.php
-│ └── CSRF.php
-├── controllers/
-│ └── AuthController.php
-├── models/
-│ └── Admin.php
-├── views/
-│ ├── login.php
-│ └── dashboard.php
-├── routes/
-│ └── web.php
-├── public/
-│ ├── index.php
-│ └── .htaccess
-└── composer.json (optional)
+## Project Structure
+
+![alt text](image-5.png)
 
 
 
@@ -119,3 +102,30 @@ Books List
 ````
 
 ![alt text](image-4.png)
+
+
+
+
+
+admin-login-app/                                           
+├── config/                                                        
+│ └── Database.php                                    
+├── core/
+│ ├── Controller.php
+│ ├── Model.php
+│ └── CSRF.php
+├── controllers/
+│ └── AuthController.php
+├── models/
+│ └── Admin.php
+├── views/
+│ ├── login.php
+│ └── dashboard.php
+├── routes/
+│ └── web.php
+├── public/
+│ ├── index.php
+│ └── .htaccess
+└── composer.json (optional)
+
+
