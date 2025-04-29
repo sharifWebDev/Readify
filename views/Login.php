@@ -39,6 +39,11 @@ if (isset($_SESSION['admin'])) {
 
 ?>
 
+<?php if (!empty($message)): ?>
+    <div class="alert alert-success" role="alert">
+        <?= htmlspecialchars($message); ?>
+    </div>
+<?php endif; ?>
 
 <div class="container-fluid login-wrapper d-flex justify-content-center align-items-center">
     <div class="card shadow login-card">

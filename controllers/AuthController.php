@@ -92,6 +92,10 @@ class AuthController extends Controller {
         return $this->view('Admin-Dashboard', ['success' => 'You are logged in.']);
     }
 
+    public function dbSetup() {
+        return $this->view('conn-setup', ['success' => 'No Database found. Please click on the button below to setup database.']);
+    }
+
     public function findDb()
     {
         if (!$this->checkDb()) {
@@ -129,7 +133,8 @@ class AuthController extends Controller {
             $this->dbSeed();
             
         $message = urlencode('✅ Setup completed successfully!');
-        header("Location: /login?message=$message");
+        // header("Location: /login?message=$message");
+        return $this->redirect('/login?message=' . $message);
 
         } catch (PDOException $e) {
             echo "Error creating database operations: " . $e->getMessage();

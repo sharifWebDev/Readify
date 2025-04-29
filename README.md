@@ -89,7 +89,12 @@ Readify/
 └── composer.json (optional).                                           
 
 
+```
+At First   http://localhost/Readify/public/
 
+Automatic Database create, import and seed
+```
+![alt text](image-5.png)
 
 
 ````

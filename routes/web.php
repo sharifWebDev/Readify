@@ -28,8 +28,7 @@ $auth = new AuthController();
 if ($rootPath === '/' && $_SERVER['REQUEST_METHOD'] === 'GET') 
 { 
     if(!$auth->findDb()) {
-        $auth->page('conn-setup');
-        exit;
+        $auth->dbSetup();
     }
 
     // echo $rootPath;

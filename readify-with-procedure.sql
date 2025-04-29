@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 29, 2025 at 04:09 AM
+-- Generation Time: Apr 29, 2025 at 05:16 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.12
 
@@ -247,6 +247,45 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateLateFee` (IN `p_key_name` VAR
     COMMIT;
 
     SELECT 'success' AS status, 'Late fee created successfully' AS message;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateLog` (IN `p_action` VARCHAR(255), IN `p_user_type` VARCHAR(20), IN `p_user_id` INT)   proc: BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'error' AS status, 'Something went wrong while creating log' AS message;
+    END;
+
+    -- Validation
+    IF p_action IS NULL OR TRIM(p_action) = '' THEN
+        SELECT 'error' AS status, 'Action is required' AS message;
+        LEAVE proc;
+    END IF;
+
+    IF p_user_type IS NULL OR TRIM(p_user_type) = '' THEN
+        SELECT 'error' AS status, 'User type is required' AS message;
+        LEAVE proc;
+    END IF;
+
+    IF p_user_id IS NULL OR p_user_id <= 0 THEN
+        SELECT 'error' AS status, 'User ID is invalid' AS message;
+        LEAVE proc;
+    END IF;
+
+    -- Optional: Check if admin exists (optional validation)
+    IF NOT EXISTS (SELECT 1 FROM admins WHERE id = p_user_id) THEN
+        SELECT 'error' AS status, 'User not found in admins table' AS message;
+        LEAVE proc;
+    END IF;
+
+    START TRANSACTION;
+
+    INSERT INTO logs (action, user_type, user_id)
+    VALUES (p_action, p_user_type, p_user_id);
+
+    COMMIT;
+
+    SELECT 'success' AS status, 'Log created successfully' AS message;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateMember` (IN `p_first_name` VARCHAR(50), IN `p_last_name` VARCHAR(50), IN `p_email` VARCHAR(100), IN `p_password` VARCHAR(255), IN `p_phone` VARCHAR(15), IN `p_address` VARCHAR(255), IN `p_verified_at` TIMESTAMP)   proc: BEGIN
@@ -606,6 +645,32 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `DeleteLateFee` (IN `p_id` INT)   pr
     SELECT 'success' AS status, 'Late fee deleted successfully' AS message;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `DeleteLog` (IN `p_id` INT)   proc: BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'error' AS status, 'Something went wrong while deleting log' AS message;
+    END;
+
+    IF p_id IS NULL OR p_id <= 0 THEN
+        SELECT 'error' AS status, 'Invalid ID' AS message;
+        LEAVE proc;
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM logs WHERE id = p_id) THEN
+        SELECT 'error' AS status, 'Log not found' AS message;
+        LEAVE proc;
+    END IF;
+
+    START TRANSACTION;
+
+    DELETE FROM logs WHERE id = p_id;
+
+    COMMIT;
+
+    SELECT 'success' AS status, 'Log deleted successfully' AS message;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `DeleteMember` (IN `p_id` INT)   proc: BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
     BEGIN
@@ -847,6 +912,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ListLateFees` ()   BEGIN
             id, key_name, charge, is_active, created_at, updated_at
         FROM late_fees
         ORDER BY id DESC;
+    END IF;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ListLogs` ()   BEGIN
+    IF (SELECT COUNT(*) FROM logs) = 0 THEN
+        SELECT 'error' AS status, 'No logs found' AS message;
+    ELSE
+        SELECT * FROM logs ORDER BY timestamp DESC;
     END IF;
 END$$
 
@@ -1638,6 +1711,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ViewLateFee` (IN `p_id` INT)   BEGI
     END IF;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ViewLog` (IN `p_id` INT)   BEGIN
+    IF p_id IS NULL OR p_id <= 0 THEN
+        SELECT 'error' AS status, 'Invalid ID' AS message;
+    ELSE
+        IF NOT EXISTS (SELECT 1 FROM logs WHERE id = p_id) THEN
+            SELECT 'error' AS status, 'Log not found' AS message;
+        ELSE
+            SELECT * FROM logs WHERE id = p_id;
+        END IF;
+    END IF;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ViewMember` (IN `p_member_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
     BEGIN
@@ -1784,6 +1869,13 @@ CREATE TABLE `customer_subscriptions` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `customer_subscriptions`
+--
+
+INSERT INTO `customer_subscriptions` (`id`, `member_id`, `start_date`, `end_date`, `payment_status`, `payable_amount`, `payment_date`, `created_at`, `updated_at`) VALUES
+(2, 2, '2025-04-22', '2029-04-18', '1', 2000.00, '2025-04-23', '2025-04-22 15:11:17', '2025-04-29 15:12:02');
+
 -- --------------------------------------------------------
 
 --
@@ -1875,6 +1967,13 @@ CREATE TABLE `payments` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `subscription_id`, `transaction_id`, `payment_method`, `total_payable_amount`, `fine_amount`, `total_due_amount`, `paid_amount`, `total_paid_amount`, `payment_status`, `payment_date`, `created_at`, `updated_at`) VALUES
+(2, 2, 'RE-2025-00004', 'Cash', 2000.00, 0.00, 100.00, 1900.00, 1900.00, '2', '2025-04-22 15:12:16', '2025-04-22 15:12:16', '2025-04-29 15:13:38');
+
 -- --------------------------------------------------------
 
 --
@@ -1942,6 +2041,13 @@ CREATE TABLE `transactions` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `transactions`
+--
+
+INSERT INTO `transactions` (`id`, `transaction_id`, `member_id`, `book_id`, `issue_date`, `due_date`, `return_date`, `fine_amount`, `status`, `is_approved`, `created_at`, `updated_at`) VALUES
+(2, 'TR-RE-2025-001234', 2, 1, '2025-04-22', '2025-04-23', NULL, 0.00, '1', 1, '2025-04-22 15:13:55', '2025-04-29 15:15:10');
 
 --
 -- Indexes for dumped tables
@@ -2068,7 +2174,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `customer_subscriptions`
 --
 ALTER TABLE `customer_subscriptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `late_fees`
@@ -2092,7 +2198,7 @@ ALTER TABLE `members`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `subscription_packages`
@@ -2110,7 +2216,7 @@ ALTER TABLE `subscription_package_details`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
