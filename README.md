@@ -66,7 +66,28 @@ git push origin develop
 
 ## Project Structure
 
-![alt text](image-6.png)
+
+Readify/                                           
+├── config/                                                        
+│ └── Database.php                                    
+├── core/                                 
+│ ├── Controller.php                       
+│ ├── Model.php                    
+│ └── CSRF.php                            
+├── controllers/                                                       
+│ └── AuthController.php                        
+├── models/                                  
+│ └── Admin.php                       
+├── views/                              
+│ ├── login.php                           
+│ └── dashboard.php                                     
+├── routes/                           
+│ └── web.php                                      
+├── public/                         
+│ ├── index.php                             
+│ └── .htaccess                             
+└── composer.json (optional).                                           
+
 
 
 
@@ -105,27 +126,5 @@ Books List
 
 
 
-
-
-Readify/                                           
-├── config/                                                        
-│ └── Database.php                                    
-├── core/                                 
-│ ├── Controller.php                       
-│ ├── Model.php                    
-│ └── CSRF.php                            
-├── controllers/                                                       
-│ └── AuthController.php                        
-├── models/                                  
-│ └── Admin.php                       
-├── views/                              
-│ ├── login.php                           
-│ └── dashboard.php                                     
-├── routes/                           
-│ └── web.php                                      
-├── public/                         
-│ ├── index.php                             
-│ └── .htaccess                             
-└── composer.json (optional).                                           
 
 
