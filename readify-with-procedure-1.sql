@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 29, 2025 at 05:16 PM
+-- Generation Time: May 05, 2025 at 04:07 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.12
 
@@ -804,6 +804,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `DeleteTransaction` (IN `p_id` INT) 
     SELECT 'success' AS status, 'Transaction deleted successfully' AS message;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetCustomerLateFees` ()   BEGIN
+    SELECT 
+        m.first_name AS `Member Name`,
+        t.transaction_id AS `Transaction ID`,
+        b.title AS `Book Name`,
+        t.issue_date AS `Issue Date`,
+        t.due_date AS `Due Date`,
+        t.return_date AS `Return Date`,
+        DATEDIFF(t.return_date, t.due_date) AS `Total Due Days`,
+        (DATEDIFF(t.return_date, t.due_date) * lf.charge) AS `Total Fine Amount`
+    FROM 
+        transactions t
+    INNER JOIN members m ON t.member_id = m.id
+    INNER JOIN books b ON t.book_id = b.id
+    INNER JOIN late_fees lf ON lf.key_name = 'daily_late_fee' AND lf.is_active = 1
+    WHERE 
+        t.return_date IS NOT NULL
+        AND t.return_date > t.due_date;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListAdmins` ()   BEGIN
     DECLARE total_admins INT;
 
@@ -1038,6 +1058,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ListTransactions` ()   BEGIN
         FROM transactions
         ORDER BY id DESC;
     END IF;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_subscription_revenue_report` ()   BEGIN
+    SELECT 
+        m.first_name AS member_name,
+        COUNT(cs.id) AS total_subscriptions,
+        COALESCE(SUM(p.paid_amount), 0) AS total_paid_amount,
+        COALESCE(SUM(p.fine_amount), 0) AS total_fine_amount,
+        COALESCE(SUM(p.paid_amount + p.fine_amount), 0) AS total_revenue,
+        MIN(cs.start_date) AS first_subscription_date,
+        MAX(cs.end_date) AS last_subscription_date
+    FROM customer_subscriptions cs
+    JOIN members m ON cs.member_id = m.id
+    LEFT JOIN payments p ON p.subscription_id = cs.id
+    GROUP BY cs.member_id
+    ORDER BY total_revenue DESC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateAdmin` (IN `p_id` INT, IN `p_username` VARCHAR(50), IN `p_email` VARCHAR(100))   proc: BEGIN
@@ -1874,7 +1910,8 @@ CREATE TABLE `customer_subscriptions` (
 --
 
 INSERT INTO `customer_subscriptions` (`id`, `member_id`, `start_date`, `end_date`, `payment_status`, `payable_amount`, `payment_date`, `created_at`, `updated_at`) VALUES
-(2, 2, '2025-04-22', '2029-04-18', '1', 2000.00, '2025-04-23', '2025-04-22 15:11:17', '2025-04-29 15:12:02');
+(2, 2, '2025-04-22', '2029-04-18', '1', 2000.00, '2025-04-23', '2025-04-22 15:11:17', '2025-04-17 15:12:02'),
+(3, 3, '2025-05-07', '2026-05-23', '1', 300.00, '2025-05-07', '2025-05-21 01:48:38', '2025-05-05 01:53:07');
 
 -- --------------------------------------------------------
 
@@ -1943,7 +1980,8 @@ CREATE TABLE `members` (
 --
 
 INSERT INTO `members` (`id`, `first_name`, `last_name`, `email`, `password`, `phone`, `address`, `verified_at`, `created_at`, `updated_at`) VALUES
-(2, 'qwe', 'qwer', 'qwer@gmail.com', 'qwfgfdsa', '23455432', 'asd', '0000-00-00 00:00:00', '2025-04-28 17:59:00', '2025-04-28 17:59:00');
+(2, 'Sumon', 'Mia', 'qwer@gmail.com', 'qwfgfdsa', '23455432', 'asd', '0000-00-00 00:00:00', '2025-04-28 17:59:00', '2025-05-05 01:12:19'),
+(3, 'Abdul ', 'Kader', 'abk@gmail.com', '2121212', '01978786767', 'dhaka', '2025-05-05 01:12:24', '2025-05-08 01:12:24', '2025-05-05 01:13:06');
 
 -- --------------------------------------------------------
 
@@ -1972,7 +2010,8 @@ CREATE TABLE `payments` (
 --
 
 INSERT INTO `payments` (`id`, `subscription_id`, `transaction_id`, `payment_method`, `total_payable_amount`, `fine_amount`, `total_due_amount`, `paid_amount`, `total_paid_amount`, `payment_status`, `payment_date`, `created_at`, `updated_at`) VALUES
-(2, 2, 'RE-2025-00004', 'Cash', 2000.00, 0.00, 100.00, 1900.00, 1900.00, '2', '2025-04-22 15:12:16', '2025-04-22 15:12:16', '2025-04-29 15:13:38');
+(2, 2, 'RE-2025-00004', 'Cash', 2000.00, 0.00, 100.00, 1900.00, 1900.00, '2', '2025-04-22 15:12:16', '2025-04-22 15:12:16', '2025-04-29 15:13:38'),
+(3, 3, 'RE-2025-00005', 'Cash', 200.00, 0.00, 0.00, 200.00, 200.00, '1', '2025-05-12 01:50:48', '2025-05-05 01:50:48', '2025-05-05 01:51:35');
 
 -- --------------------------------------------------------
 
@@ -2047,7 +2086,8 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`id`, `transaction_id`, `member_id`, `book_id`, `issue_date`, `due_date`, `return_date`, `fine_amount`, `status`, `is_approved`, `created_at`, `updated_at`) VALUES
-(2, 'TR-RE-2025-001234', 2, 1, '2025-04-22', '2025-04-23', NULL, 0.00, '1', 1, '2025-04-22 15:13:55', '2025-04-29 15:15:10');
+(2, 'RE-2025-001234', 2, 1, '2025-04-22', '2025-04-27', '2025-04-30', 3.00, '1', 1, '2025-04-22 15:13:55', '2025-05-05 01:15:03'),
+(3, 'RE-2025-001235', 3, 2, '2025-05-01', '2025-05-08', '2025-05-15', 0.00, '1', 1, '2025-05-15 01:13:31', '2025-05-05 01:14:34');
 
 --
 -- Indexes for dumped tables
@@ -2174,7 +2214,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `customer_subscriptions`
 --
 ALTER TABLE `customer_subscriptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `late_fees`
@@ -2192,13 +2232,13 @@ ALTER TABLE `logs`
 -- AUTO_INCREMENT for table `members`
 --
 ALTER TABLE `members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `subscription_packages`
@@ -2216,7 +2256,7 @@ ALTER TABLE `subscription_package_details`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
