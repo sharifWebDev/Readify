@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 05, 2025 at 04:07 AM
--- Server version: 10.4.27-MariaDB
+-- Generation Time: May 21, 2025 at 04:43 AM
+-- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -814,6 +814,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `GetCustomerLateFees` ()   BEGIN
         t.return_date AS `Return Date`,
         DATEDIFF(t.return_date, t.due_date) AS `Total Due Days`,
         (DATEDIFF(t.return_date, t.due_date) * lf.charge) AS `Total Fine Amount`
+    FROM 
+        transactions t
+    INNER JOIN members m ON t.member_id = m.id
+    INNER JOIN books b ON t.book_id = b.id
+    INNER JOIN late_fees lf ON lf.key_name = 'daily_late_fee' AND lf.is_active = 1
+    WHERE 
+        t.return_date IS NOT NULL
+        AND t.return_date > t.due_date;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_late_fee_report` ()   BEGIN
+    SELECT 
+        t.id AS id,
+        m.first_name AS member_name,
+        t.transaction_id,
+        b.title AS book_name,
+        t.issue_date,
+        t.due_date,
+        t.return_date,
+        DATEDIFF(t.return_date, t.due_date) AS total_due_days,
+        (DATEDIFF(t.return_date, t.due_date) * lf.charge) AS total_fine_amount
     FROM 
         transactions t
     INNER JOIN members m ON t.member_id = m.id
@@ -1811,7 +1832,8 @@ INSERT INTO `admins` (`id`, `username`, `password`, `email`, `verified_at`, `cre
 (5, 'bedosyh', '$2y$10$Ea5HBd4haUS5/1yliAYuP.DX9oaZAHzpa8ndD5.PJBNklsCINVjw6', 'wugipas@mailinator.com', NULL, '2025-04-27 16:10:34', '2025-04-27 16:10:34'),
 (6, 'qemys', '$2y$10$qc2mFSaE1w8.cAJGPohLX.ZnqCgrAJZ9t7wsBIxCig21tWwop8Ixe', 'hudik@mailinator.com', NULL, '2025-04-27 16:12:21', '2025-04-27 16:12:21'),
 (7, 'gylaz', '$2y$10$pnpMFF2cpkPQXCvvVMnRyePBqHtDYo8cFHqTLKQXToYCRlrEub.Hu', 'tuqyduti@mailinator.com', NULL, '2025-04-27 16:13:23', '2025-04-27 16:13:23'),
-(8, 'japuwyryfe', '$2y$10$6fhybYQqO1o3GmTamyJ5S.qtnXu9blQxysGJNvab384DlNJSqvrcW', 'xaciw@mailinator.com', NULL, '2025-04-27 16:22:13', '2025-04-27 16:22:13');
+(8, 'japuwyryfe', '$2y$10$6fhybYQqO1o3GmTamyJ5S.qtnXu9blQxysGJNvab384DlNJSqvrcW', 'xaciw@mailinator.com', NULL, '2025-04-27 16:22:13', '2025-04-27 16:22:13'),
+(10, 'rodexulo', '$2y$10$iXL7p4Dju3klTzrbNZNHo.huy1s5QBH17gVDkHd31rZ.MBm2cs.RS', 'qozequzo@mailinator.com', NULL, '2025-05-21 01:09:38', '2025-05-21 01:09:38');
 
 -- --------------------------------------------------------
 
@@ -1861,7 +1883,10 @@ CREATE TABLE `books` (
 
 INSERT INTO `books` (`id`, `title`, `author_id`, `isbn`, `code`, `category_id`, `quantity`, `available_quantity`, `created_at`, `updated_at`) VALUES
 (1, 'Harry Potter', 1, '9780439136365', 'HP001', 1, 10, 10, '2025-04-26 17:24:36', '2025-04-26 17:24:36'),
-(2, 'Game of Thrones', 2, '9780553103540', 'GOT001', 1, 5, 5, '2025-04-26 17:24:36', '2025-04-26 17:24:36');
+(2, 'Game of Thrones', 2, '9780553103540', 'GOT001', 1, 5, 5, '2025-04-26 17:24:36', '2025-04-26 17:24:36'),
+(3, 'Dolores do ex volupt', 1, 'Eum aliquam quia ape', 'Vero sunt do unde om', 2, 442, 0, '2025-05-21 00:51:27', '2025-05-21 00:51:27'),
+(4, 'Nostrud laborum In ', 1, 'Doloremque magnam qu', 'Nulla maiores sint a', 2, 79, 0, '2025-05-21 00:53:17', '2025-05-21 00:53:17'),
+(6, 'Excepteur minus recu', 1, 'Temporibus ullamco v', 'Non corporis laboris', 2, 545, 0, '2025-05-21 00:55:14', '2025-05-21 00:55:14');
 
 -- --------------------------------------------------------
 
@@ -1981,7 +2006,9 @@ CREATE TABLE `members` (
 
 INSERT INTO `members` (`id`, `first_name`, `last_name`, `email`, `password`, `phone`, `address`, `verified_at`, `created_at`, `updated_at`) VALUES
 (2, 'Sumon', 'Mia', 'qwer@gmail.com', 'qwfgfdsa', '23455432', 'asd', '0000-00-00 00:00:00', '2025-04-28 17:59:00', '2025-05-05 01:12:19'),
-(3, 'Abdul ', 'Kader', 'abk@gmail.com', '2121212', '01978786767', 'dhaka', '2025-05-05 01:12:24', '2025-05-08 01:12:24', '2025-05-05 01:13:06');
+(3, 'Abdul ', 'Kader', 'abk@gmail.com', '2121212', '01978786767', 'dhaka', '2025-05-05 01:12:24', '2025-05-08 01:12:24', '2025-05-05 01:13:06'),
+(4, 'Karleigh', 'Blair', 'pinozeh@mailinator.com', '$2y$10$GNa9EsfQbX/aVoeIRLmKgOnbaC53t4iemfJaw1YSgjUYpBSnoKRBe', '+1 (492) 945-98', 'Sed dignissimos aut ', '1998-10-10 04:31:00', '2025-05-21 02:32:31', '2025-05-21 02:32:31'),
+(5, 'Whilemina', 'Montgomery', 'katax@mailinator.com', '$2y$10$7FXGgiE0wpKlnNkILWwNuOTkN7KRFZoXVmihChr7aGl7S74fiaOcG', '+1 (344) 148-71', 'Commodi laboris quae', '2018-01-15 06:00:00', '2025-05-21 02:32:55', '2025-05-21 02:32:55');
 
 -- --------------------------------------------------------
 
@@ -2190,7 +2217,7 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `authors`
@@ -2202,7 +2229,7 @@ ALTER TABLE `authors`
 -- AUTO_INCREMENT for table `books`
 --
 ALTER TABLE `books`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -2232,7 +2259,7 @@ ALTER TABLE `logs`
 -- AUTO_INCREMENT for table `members`
 --
 ALTER TABLE `members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `payments`
