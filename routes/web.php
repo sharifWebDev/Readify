@@ -117,6 +117,20 @@ $customerSubsController = new CustomerSubscriptionsController();
 if ($rootPath === '/customer-subscriptions' && $_SERVER['REQUEST_METHOD'] === 'GET') {
    $customerSubsController->index();
 }
+if ($rootPath === '/customer-subscriptions/store' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+   $customerSubsController->store();
+}
+if ($rootPath === '/issue-books' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+   $customerSubsController->issueBook();
+}
+if ($rootPath === '/issue-books/store' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+   $customerSubsController->storeIssue();
+}
+if ($rootPath === '/issue-books/update' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+   $customerSubsController->updateIssue();
+}
+
+
 
 if ($rootPath === '/late-fee' && $_SERVER['REQUEST_METHOD'] === 'GET') {
    $customerSubsController->lateFee();

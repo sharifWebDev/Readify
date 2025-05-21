@@ -89,37 +89,22 @@
             </div>
 
             <div class="modal-body">
-                <form method="POST" action="<?php echo $url->url('CusSubss/store'); ?>">
-
-                    <!-- Start Date -->
+                <form method="POST" action="<?php echo $url->url('customer-subscriptions/store'); ?>">
+    
                     <div class="mb-3">
-                        <label for="start_date" class="form-label">Start Date <span class="text-danger">*</span></label>
-                        <input type="date" class="form-control" id="start_date" name="start_date" required>
-                    </div>
-
-                    <!-- End Date -->
-                    <div class="mb-3">
-                        <label for="end_date" class="form-label">End Date <span class="text-danger">*</span></label>
-                        <input type="date" class="form-control" id="end_date" name="end_date" required>
-                    </div>
-
-                    <!-- Payment Status -->
-                    <div class="mb-3">
-                        <label for="payment_status" class="form-label">Payment Status <span class="text-danger">*</span></label>
-                        <select class="form-select" id="payment_status" name="payment_status" required>
-                            <option value="">Select Status</option>
-                            <option value="1">Paid</option>
-                            <option value="0">Unpaid</option>
+                        <label for="subscription_id" class="form-label">Subscription Package <span class="text-danger">*</span></label>
+                        <select class="form-select" id="subscription_id" name="subscription_id" required>
+                            <option value="">Select Subscription Package</option>
+                            <?php foreach ($getSubscriptionsPackage ?? [] as $package): ?>
+                                <option value="<?= htmlspecialchars($package->id) ?>"
+                                        data-price="<?= htmlspecialchars($package->price - $package->discount) ?>">
+                                    <?= htmlspecialchars($package->package_name) ?> — Payable Amount: <?= htmlspecialchars($package->price) ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
+                    <input type="hidden" id="payable_amount" name="payable_amount" value="">
 
-                    <!-- Payable Amount -->
-                    <div class="mb-3">
-                        <label for="payable_amount" class="form-label">Payable Amount <span class="text-danger">*</span></label>
-                        <input type="number" step="0.01" min="0" class="form-control" id="payable_amount" name="payable_amount" required>
-                    </div>
-
-                    <!-- Member ID -->
                     <div class="mb-3">
                         <label for="member_id" class="form-label">Member <span class="text-danger">*</span></label>
                         <select class="form-select" id="member_id" name="member_id" required>
@@ -132,10 +117,22 @@
                         </select>
                     </div>
 
+                    <!-- Start Date -->
+                    <div class="mb-3">
+                        <label for="start_date" class="form-label">Start Date <span class="text-danger">*</span></label>
+                        <input type="date" min="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d'); ?>" class="form-control" id="start_date" name="start_date" required>
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="mb-3">
+                        <label for="end_date" class="form-label">End Date <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" min="<?php echo date('Y-m-d'); ?>" id="end_date" name="end_date" required>
+                    </div>
+              
                     <!-- Payment Date -->
                     <div class="mb-3">
                         <label for="payment_date" class="form-label">Payment Date</label>
-                        <input type="date" class="form-control" id="payment_date" name="payment_date">
+                        <input type="date" class="form-control" min="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d'); ?>" id="payment_date" name="payment_date">
                     </div>
 
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -146,6 +143,19 @@
         </div>
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const subscriptionSelect = document.getElementById('subscription_id');
+    const payableInput = document.getElementById('payable_amount');
+
+    subscriptionSelect.addEventListener('change', function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const price = selectedOption.getAttribute('data-price') || '';
+        payableInput.value = price;
+    });
+});
+</script>
+
 
 
 </div>

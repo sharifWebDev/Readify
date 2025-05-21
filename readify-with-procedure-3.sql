@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2025 at 04:43 AM
+-- Generation Time: May 21, 2025 at 05:57 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -1064,20 +1064,24 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ListTransactions` ()   BEGIN
         SELECT 'error' AS status, 'No transactions found' AS message;
     ELSE
         SELECT 
-            id, 
-            transaction_id, 
-            member_id, 
-            book_id, 
-            issue_date, 
-            due_date, 
-            return_date, 
-            fine_amount, 
-            status, 
-            is_approved, 
-            created_at, 
-            updated_at
-        FROM transactions
-        ORDER BY id DESC;
+            t.id,
+            t.transaction_id,
+            t.member_id,
+            c.first_name AS member_name, -- Get from customers
+            t.book_id,
+            b.title AS book_title,       -- Get from books
+            t.issue_date,
+            t.due_date,
+            t.return_date,
+            t.fine_amount,
+            t.status,
+            t.is_approved,
+            t.created_at,
+            t.updated_at
+        FROM transactions t
+        LEFT JOIN books b ON b.id = t.book_id
+        LEFT JOIN members c ON c.id = t.member_id
+        ORDER BY t.id DESC;
     END IF;
 END$$
 
@@ -1921,6 +1925,7 @@ INSERT INTO `categories` (`id`, `name`, `slug`, `parent_category_id`, `is_active
 CREATE TABLE `customer_subscriptions` (
   `id` int(11) NOT NULL,
   `member_id` int(11) DEFAULT NULL,
+  `subscription_id` int(10) DEFAULT 1,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
   `payment_status` varchar(20) NOT NULL,
@@ -1934,9 +1939,25 @@ CREATE TABLE `customer_subscriptions` (
 -- Dumping data for table `customer_subscriptions`
 --
 
-INSERT INTO `customer_subscriptions` (`id`, `member_id`, `start_date`, `end_date`, `payment_status`, `payable_amount`, `payment_date`, `created_at`, `updated_at`) VALUES
-(2, 2, '2025-04-22', '2029-04-18', '1', 2000.00, '2025-04-23', '2025-04-22 15:11:17', '2025-04-17 15:12:02'),
-(3, 3, '2025-05-07', '2026-05-23', '1', 300.00, '2025-05-07', '2025-05-21 01:48:38', '2025-05-05 01:53:07');
+INSERT INTO `customer_subscriptions` (`id`, `member_id`, `subscription_id`, `start_date`, `end_date`, `payment_status`, `payable_amount`, `payment_date`, `created_at`, `updated_at`) VALUES
+(2, 2, 1, '2025-04-22', '2029-04-18', '1', 2000.00, '2025-04-23', '2025-04-22 15:11:17', '2025-04-17 15:12:02'),
+(3, 3, 1, '2025-05-07', '2026-05-23', '1', 300.00, '2025-05-07', '2025-05-21 01:48:38', '2025-05-05 01:53:07'),
+(5, 3, 1, '2018-02-14', '1975-02-23', '1', 96.00, '2021-04-09', '2025-05-21 13:53:15', '2025-05-21 13:53:15'),
+(6, 3, 1, '1994-03-04', '1999-11-08', '0', 43.00, '2003-05-19', '2025-05-21 13:53:22', '2025-05-21 13:53:22'),
+(7, 5, 2, '2009-12-27', '1996-02-06', '1', 57.00, '1974-09-21', '2025-05-21 13:53:28', '2025-05-21 13:53:28'),
+(8, 6, 1, '2019-10-22', '1985-04-19', '0', 76.00, '1979-11-12', '2025-05-21 13:53:40', '2025-05-21 13:53:40'),
+(9, 5, 1, '2015-12-10', '2007-11-18', '0', 0.00, '2014-01-19', '2025-05-21 14:06:32', '2025-05-21 14:06:32'),
+(10, 5, 1, '2010-05-02', '1987-07-30', '1', 9.99, '1974-04-02', '2025-05-21 14:09:07', '2025-05-21 14:09:07'),
+(11, 5, 2, '1976-02-23', '2014-07-22', '1', 99.99, '1992-01-20', '2025-05-21 14:10:35', '2025-05-21 14:10:35'),
+(12, 2, 1, '2014-07-15', '2008-02-03', '1', 8.99, '1971-10-09', '2025-05-21 14:10:42', '2025-05-21 14:10:42'),
+(13, 6, 1, '2019-07-21', '2000-10-13', '1', 8.99, '2002-08-05', '2025-05-21 14:10:47', '2025-05-21 14:10:47'),
+(14, 6, 1, '2004-10-19', '1971-09-13', '1', 8.99, '1979-05-08', '2025-05-21 14:19:38', '2025-05-21 14:19:38'),
+(15, 6, 2, '2001-01-21', '1997-08-11', '1', 89.99, '2005-12-10', '2025-05-21 14:24:33', '2025-05-21 14:24:33'),
+(16, 3, 2, '2024-06-20', '2021-10-14', '1', 89.99, '2017-01-12', '2025-05-21 14:25:43', '2025-05-21 14:25:43'),
+(17, 6, 2, '1995-11-18', '2005-05-20', '1', 89.99, '2011-07-13', '2025-05-21 14:26:09', '2025-05-21 14:26:09'),
+(18, 6, 2, '1993-11-16', '1984-03-23', '1', 89.99, '1975-03-27', '2025-05-21 14:29:57', '2025-05-21 14:29:57'),
+(19, 6, 2, '1984-05-06', '2033-10-05', '1', 89.99, '2025-05-21', '2025-05-21 14:31:00', '2025-05-21 14:31:00'),
+(20, 5, 2, '2025-05-21', '2025-05-31', '1', 89.99, '2025-05-21', '2025-05-21 14:36:34', '2025-05-21 14:36:34');
 
 -- --------------------------------------------------------
 
@@ -2008,7 +2029,8 @@ INSERT INTO `members` (`id`, `first_name`, `last_name`, `email`, `password`, `ph
 (2, 'Sumon', 'Mia', 'qwer@gmail.com', 'qwfgfdsa', '23455432', 'asd', '0000-00-00 00:00:00', '2025-04-28 17:59:00', '2025-05-05 01:12:19'),
 (3, 'Abdul ', 'Kader', 'abk@gmail.com', '2121212', '01978786767', 'dhaka', '2025-05-05 01:12:24', '2025-05-08 01:12:24', '2025-05-05 01:13:06'),
 (4, 'Karleigh', 'Blair', 'pinozeh@mailinator.com', '$2y$10$GNa9EsfQbX/aVoeIRLmKgOnbaC53t4iemfJaw1YSgjUYpBSnoKRBe', '+1 (492) 945-98', 'Sed dignissimos aut ', '1998-10-10 04:31:00', '2025-05-21 02:32:31', '2025-05-21 02:32:31'),
-(5, 'Whilemina', 'Montgomery', 'katax@mailinator.com', '$2y$10$7FXGgiE0wpKlnNkILWwNuOTkN7KRFZoXVmihChr7aGl7S74fiaOcG', '+1 (344) 148-71', 'Commodi laboris quae', '2018-01-15 06:00:00', '2025-05-21 02:32:55', '2025-05-21 02:32:55');
+(5, 'Whilemina', 'Montgomery', 'katax@mailinator.com', '$2y$10$7FXGgiE0wpKlnNkILWwNuOTkN7KRFZoXVmihChr7aGl7S74fiaOcG', '+1 (344) 148-71', 'Commodi laboris quae', '2018-01-15 06:00:00', '2025-05-21 02:32:55', '2025-05-21 02:32:55'),
+(6, 'Joelle', 'Barrera', 'vyxeqod@mailinator.com', '$2y$10$ZGpXBf1fwBRpgIG8Ug1gue.dHU6rKZKdcXMsupIkRh.guiP0PzhBK', '+1 (853) 619-57', 'Necessitatibus atque', '2011-01-10 21:37:00', '2025-05-21 13:39:35', '2025-05-21 13:39:35');
 
 -- --------------------------------------------------------
 
@@ -2038,7 +2060,13 @@ CREATE TABLE `payments` (
 
 INSERT INTO `payments` (`id`, `subscription_id`, `transaction_id`, `payment_method`, `total_payable_amount`, `fine_amount`, `total_due_amount`, `paid_amount`, `total_paid_amount`, `payment_status`, `payment_date`, `created_at`, `updated_at`) VALUES
 (2, 2, 'RE-2025-00004', 'Cash', 2000.00, 0.00, 100.00, 1900.00, 1900.00, '2', '2025-04-22 15:12:16', '2025-04-22 15:12:16', '2025-04-29 15:13:38'),
-(3, 3, 'RE-2025-00005', 'Cash', 200.00, 0.00, 0.00, 200.00, 200.00, '1', '2025-05-12 01:50:48', '2025-05-05 01:50:48', '2025-05-05 01:51:35');
+(3, 3, 'RE-2025-00005', 'Cash', 200.00, 0.00, 0.00, 200.00, 200.00, '1', '2025-05-12 01:50:48', '2025-05-05 01:50:48', '2025-05-05 01:51:35'),
+(4, 2, 'TXN682de221e9e0a', 'Cash', 89.99, 0.00, 89.99, 89.99, 89.99, '1', '2025-05-21 14:24:33', '2025-05-21 14:24:33', '2025-05-21 14:24:33'),
+(5, 2, 'TXN682de267231f7', 'Cash', 89.99, 0.00, 89.99, 89.99, 89.99, '1', '2025-05-21 14:25:43', '2025-05-21 14:25:43', '2025-05-21 14:25:43'),
+(6, 2, 'TXN682de2810690b', 'Cash', 89.99, 0.00, 89.99, 89.99, 89.99, '1', '2025-05-21 14:26:09', '2025-05-21 14:26:09', '2025-05-21 14:26:09'),
+(7, 18, 'TXN682de365df536', 'Cash', 89.99, 0.00, 89.99, 89.99, 89.99, '1', '2025-05-21 14:29:57', '2025-05-21 14:29:57', '2025-05-21 14:29:57'),
+(8, 19, 'TXN682de3a467184', 'Cash', 89.99, 0.00, 89.99, 89.99, 89.99, '1', '2025-05-21 14:31:00', '2025-05-21 14:31:00', '2025-05-21 14:31:00'),
+(9, 20, 'TXN682de4f278ffb', 'Cash', 89.99, 0.00, 89.99, 89.99, 89.99, '1', '2025-05-21 14:36:34', '2025-05-21 14:36:34', '2025-05-21 14:36:34');
 
 -- --------------------------------------------------------
 
@@ -2114,7 +2142,10 @@ CREATE TABLE `transactions` (
 
 INSERT INTO `transactions` (`id`, `transaction_id`, `member_id`, `book_id`, `issue_date`, `due_date`, `return_date`, `fine_amount`, `status`, `is_approved`, `created_at`, `updated_at`) VALUES
 (2, 'RE-2025-001234', 2, 1, '2025-04-22', '2025-04-27', '2025-04-30', 3.00, '1', 1, '2025-04-22 15:13:55', '2025-05-05 01:15:03'),
-(3, 'RE-2025-001235', 3, 2, '2025-05-01', '2025-05-08', '2025-05-15', 0.00, '1', 1, '2025-05-15 01:13:31', '2025-05-05 01:14:34');
+(3, 'RE-2025-001235', 3, 2, '2025-05-01', '2025-05-08', '2025-05-15', 0.00, '1', 1, '2025-05-15 01:13:31', '2025-05-05 01:14:34'),
+(4, 'sfd', 6, 2, '2025-04-22', '0000-00-00', '2025-05-15', 0.00, '1', 0, '2025-05-21 15:31:19', '2025-05-21 15:31:19'),
+(5, 'TXN682df27793c36', 4, 2, '2025-05-21', '2025-05-21', NULL, 0.00, '0', 1, '2025-05-21 11:34:15', '2025-05-21 15:34:15'),
+(6, 'TXN682df29272ae3', 5, 3, '2025-05-21', '2025-05-21', NULL, 0.00, '0', 1, '2025-05-21 11:34:42', '2025-05-21 15:34:42');
 
 --
 -- Indexes for dumped tables
@@ -2241,7 +2272,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `customer_subscriptions`
 --
 ALTER TABLE `customer_subscriptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `late_fees`
@@ -2259,13 +2290,13 @@ ALTER TABLE `logs`
 -- AUTO_INCREMENT for table `members`
 --
 ALTER TABLE `members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `subscription_packages`
@@ -2283,7 +2314,7 @@ ALTER TABLE `subscription_package_details`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables

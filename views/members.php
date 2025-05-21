@@ -39,8 +39,7 @@
                                         <th>ID</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
-                                        <th>Email</th>
-                                        <th>Password</th>
+                                        <th>Email</th> 
                                         <th>Phone</th>
                                         <th>Address</th>
                                         <th>Verified At</th>
@@ -54,11 +53,10 @@
                                             <td><?= htmlspecialchars($subs->id) ?></td>
                                             <td><?= htmlspecialchars($subs->first_name) ?></td>
                                             <td><?= htmlspecialchars($subs->last_name) ?></td>
-                                            <td><?= htmlspecialchars($subs->email) ?></td>
-                                            <td style="word-break: break-all; width: 100px"><?= htmlspecialchars($subs->password) ?></td>
+                                            <td><?= htmlspecialchars($subs->email) ?></td> 
                                             <td><?= htmlspecialchars($subs->phone) ?></td>
                                             <td><?= htmlspecialchars($subs->address) ?></td>
-                                            <td><?= htmlspecialchars($subs->verified_at) ?></td>
+                                            <td><?= htmlspecialchars($subs->verified_at != null ? 'Verified' : 'Not Verified') ?></td>
                                             <td><?= htmlspecialchars($subs->created_at) ?></td>
                                             <td>
                                                 <!-- <a href="view-CusSubs.php?id=" class="btn btn-info btn-sm">View</a>

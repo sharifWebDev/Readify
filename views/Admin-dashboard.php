@@ -16,7 +16,16 @@
                 <div class="card-body px-4">
                     <h4 class="card-title mb-4">📊 Admin Dashboard</h4> 
                     <div class="row">
- 
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-success shadow-sm">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">📚 Get Books</h5>
+                                    <p class="card-text">issued books.</p>
+                                    <a href="<?php echo $url->url('issue-books'); ?>" class="btn btn-success">Issue</a>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-4 mb-3">
                             <div class="card border-success shadow-sm">
                                 <div class="card-body text-center">
@@ -26,7 +35,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                          <div class="col-md-4 mb-3">
                             <div class="card border-success shadow-sm">
                                 <div class="card-body text-center">
@@ -47,15 +56,6 @@
                             </div>
                         </div>
                         
-                        <div class="col-md-4 mb-3">
-                            <div class="card border-success shadow-sm">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">💳 Payments</h5>
-                                    <p class="card-text">Track Payments.</p>
-                                    <a href="<?php echo $url->url('payments'); ?>" class="btn btn-success">Manage</a>
-                                </div>
-                            </div>
-                        </div>
                        
                         <div class="col-md-4 mb-3">
                             <div class="card border-success shadow-sm">
