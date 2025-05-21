@@ -65,16 +65,7 @@
                                     <a href="<?php echo $url->url('users'); ?>" class="btn btn-success">Manage</a>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="card border-success shadow-sm">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">👤 admin Users</h5>
-                                    <p class="card-text">Track admin Users.</p>
-                                    <a href="<?php echo $url->url('users'); ?>" class="btn btn-success">Manage</a>
-                                </div>
-                            </div>
-                        </div>
+                        </div> 
 
                          <div class="col-md-4 mb-3">
                             <div class="card border-success shadow-sm">
