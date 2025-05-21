@@ -105,6 +105,36 @@ if ($rootPath === '/books' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $bookController->edit();
 } elseif ($rootPath === '/books/update' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $bookController->update();
-} elseif ($rootPath === '/books/delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $bookController->destroy();
+} elseif ($rootPath === '/books/delete' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+    $bookController->destroy($_GET['id']);
 }
+
+require_once '../controllers/CustomerSubscriptionsController.php';
+
+
+$customerSubsController = new CustomerSubscriptionsController();
+
+if ($rootPath === '/customer-subscriptions' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+   $customerSubsController->index();
+}
+
+if ($rootPath === '/late-fee' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+   $customerSubsController->lateFee();
+}
+if ($rootPath === '/revenue' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+   $customerSubsController->revenue();
+}
+
+
+require_once '../controllers/MemberController.php';
+
+$MemberController = new MemberController();
+
+if ($rootPath === '/members' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+   $MemberController->index();
+}
+if ($rootPath === '/members/store' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+   $MemberController->store();
+}
+
+

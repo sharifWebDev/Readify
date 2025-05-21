@@ -16,12 +16,23 @@
                 <div class="card-body px-4">
                     <h4 class="card-title mb-4">📊 Admin Dashboard</h4> 
                     <div class="row">
+ 
                         <div class="col-md-4 mb-3">
                             <div class="card border-success shadow-sm">
                                 <div class="card-body text-center">
                                     <h5 class="card-title">📚 Books</h5>
                                     <p class="card-text">Add, edit, or remove books.</p>
-                                    <a href="#/books" class="btn btn-success">Manage</a>
+                                    <a href="<?php echo $url->url('books'); ?>" class="btn btn-success">Manage</a>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="col-md-4 mb-3">
+                            <div class="card border-success shadow-sm">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">👤 Members</h5>
+                                    <p class="card-text">Manage library members.</p>
+                                    <a href="<?php echo $url->url('members'); ?>" class="btn btn-success">Manage</a>
                                 </div>
                             </div>
                         </div>
@@ -31,7 +42,7 @@
                                 <div class="card-body text-center">
                                     <h5 class="card-title">💳 Subscriptions</h5>
                                     <p class="card-text">Track subscriptions and billing.</p>
-                                    <a href="#" class="btn btn-success">Manage</a>
+                                    <a href="<?php echo $url->url('customer-subscriptions'); ?>" class="btn btn-success">Manage</a>
                                 </div>
                             </div>
                         </div>
@@ -41,28 +52,17 @@
                                 <div class="card-body text-center">
                                     <h5 class="card-title">💳 Payments</h5>
                                     <p class="card-text">Track Payments.</p>
-                                    <a href="#/Payments" class="btn btn-success">Manage</a>
+                                    <a href="<?php echo $url->url('payments'); ?>" class="btn btn-success">Manage</a>
                                 </div>
                             </div>
                         </div>
-
-                        
+                       
                         <div class="col-md-4 mb-3">
                             <div class="card border-success shadow-sm">
                                 <div class="card-body text-center">
-                                    <h5 class="card-title">💳 Late Fee</h5>
-                                    <p class="card-text">Track Late Fee.</p>
-                                    <a href="#/Late Fee" class="btn btn-success">Manage</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <div class="card border-success shadow-sm">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">👤 Members</h5>
-                                    <p class="card-text">Manage library members.</p>
-                                    <a href="#/members" class="btn btn-success">Manage</a>
+                                    <h5 class="card-title">👤 admin Users</h5>
+                                    <p class="card-text">Track admin Users.</p>
+                                    <a href="<?php echo $url->url('users'); ?>" class="btn btn-success">Manage</a>
                                 </div>
                             </div>
                         </div>
@@ -71,7 +71,27 @@
                                 <div class="card-body text-center">
                                     <h5 class="card-title">👤 admin Users</h5>
                                     <p class="card-text">Track admin Users.</p>
-                                    <a href="#/admin Users" class="btn btn-success">Manage</a>
+                                    <a href="<?php echo $url->url('users'); ?>" class="btn btn-success">Manage</a>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="col-md-4 mb-3">
+                            <div class="card border-success shadow-sm">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">💳 Late Fee Report</h5>
+                                    <p class="card-text">Track Late Fee Report.</p>
+                                    <a href="<?php echo $url->url('late-fee'); ?>" class="btn btn-success">Manage</a>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="col-md-4 mb-3">
+                            <div class="card border-success shadow-sm">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">💳 Revenue Report</h5>
+                                    <p class="card-text">Track Revenue Report.</p>
+                                    <a href="<?php echo $url->url('revenue'); ?>" class="btn btn-success">Manage</a>
                                 </div>
                             </div>
                         </div>

@@ -16,8 +16,14 @@
         <div class="col-md-9">
             <div class="card shadow-sm">
                 <div class="card-body">
+                     <div class="d-flex justify-content-between align-items-center mb-3 no-print">
+                        
+                        <h6 class="mb-4">Admin Users List</h6>
+                        
+                        <a class="btn btn-primary btn-sm" href="<?php echo $url->url('register'); ?>" class="list-group-item list-group-item-action">👤 Add New Admin User</a>
+                    </div>
                      
-                <h6 class="mb-4">Admin Users List</h6>
+       
  
                 <?php if (!empty($error)): ?>
                     <div class="alert alert-danger" role="alert">

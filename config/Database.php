@@ -17,8 +17,10 @@ class Database {
         try {
             $this->pdo = new PDO($dsn, $user, $pass);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  // Enable error reporting
+            return $this->pdo;
         } catch (PDOException $e) {
             die("Connection failed: " . $e->getMessage());  // Simple error message and exit
         }
     }
 }
+  
