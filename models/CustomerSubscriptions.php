@@ -64,7 +64,7 @@ class CustomerSubscriptions extends Model {
     public function getSubscriptionsPackage() {
         try {
             $stmt = $this->db->prepare("
-                SELECT * FROM subscription_packages
+                SELECT * FROM subscription_packages  ORDER by id DESC
             ");
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_OBJ);

@@ -9,7 +9,7 @@ class Book extends Model {
                 SELECT books.*, authors.name AS author_name, categories.name AS category_name
                 FROM books
                 LEFT JOIN authors ON books.author_id = authors.id
-                LEFT JOIN categories ON books.category_id = categories.id
+                LEFT JOIN categories ON books.category_id = categories.id  ORDER by id DESC
             ");
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -74,22 +74,24 @@ public function updateIssue(array $data): bool
         $sql = "
             UPDATE transactions SET
                 due_date = :due_date,
+                return_date = :return_date,
                 fine_amount = :fine_amount,
                 status = :status,
                 is_approved = :is_approved,
                 updated_at = :updated_at
-            WHERE transaction_id = :transaction_id
+            WHERE id = :id
         ";
 
         $stmt = $this->db->prepare($sql);
 
         // Use bindValue for flexibility and clarity
         $stmt->bindValue(':due_date', $data['due_date']);
+        $stmt->bindValue(':return_date', $data['return_date']);
         $stmt->bindValue(':fine_amount', $data['fine_amount']);
         $stmt->bindValue(':status', $data['status']);
         $stmt->bindValue(':is_approved', $data['is_approved']);
         $stmt->bindValue(':updated_at', $data['updated_at']);
-        $stmt->bindValue(':transaction_id', $data['id']);
+        $stmt->bindValue(':id', $data['id']);
 
         return $stmt->execute();
     } catch (PDOException $e) {

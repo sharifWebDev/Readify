@@ -69,7 +69,6 @@
                                                 <td>
                                                    <a href="#" 
                                                     class="btn btn-success btn-sm editBookBtn"
-                                                    data-url="<?= $url->url('/issue-books/update'); ?>"
                                                     data-id="<?= $txn->id ?>"
                                                     data-transaction_id="<?= htmlspecialchars($txn->transaction_id) ?>"
                                                     data-member_id="<?= $txn->member_id ?>"
@@ -184,62 +183,65 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Create dynamic form fields based on data attributes
             const formHtml = `
-                <form method="POST" action="${this.dataset.url}">
+                <form method="POST" action="<?= $url->url('/issue-books/update'); ?>">
                 <input type="hidden" name="id" value="${this.dataset.id}">
-                
-                <div class="mb-3">
-                    <label for="edit_member_id" class="form-label">Member</label>
-                    <select class="form-select" name="member_id" id="edit_member_id" required>
-                        <option value="${this.dataset.member_id}" selected readonly>Selected Member ID: ${this.dataset.member_id}</option>
-                    </select>
-                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="edit_member_id" class="form-label">Member</label>
+                        <select class="form-select" name="member_id" id="edit_member_id" required disabled>
+                            <option value="${this.dataset.member_id}" selected readonly>Selected Member ID: ${this.dataset.member_id}</option>
+                        </select>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="edit_book_id" class="form-label">Book</label>
-                    <select class="form-select" name="book_id" id="edit_book_id" required>
-                        <option value="${this.dataset.book_id}" selected  readonly>Selected Book ID: ${this.dataset.book_id}</option>
-                    </select>
+                    <div class="mb-3 col-md-6">
+                        <label for="edit_book_id" class="form-label">Book</label>
+                        <select class="form-select" name="book_id" id="edit_book_id" required disabled>
+                            <option value="${this.dataset.book_id}" selected  readonly>Selected Book ID: ${this.dataset.book_id}</option>
+                        </select>
+                    </div>
                 </div>
-
-                <div class="mb-3">
-                    <label for="edit_issue_date" class="form-label">Issue Date</label>
-                    <input type="date" class="form-control" name="issue_date" value="${this.dataset.issue_date}"  readonly>
+                <div class="row">
+                    <div class="mb-3 col-md-6"> 
+                        <label for="edit_issue_date" class="form-label">Issue Date</label>
+                        <input type="date" class="form-control" name="issue_date" value="${this.dataset.issue_date}" disabled readonly>
+                    </div>
+                    <div class="mb-3 col-md-6"> 
+                        <label for="edit_due_date" class="form-label">Due Date</label>
+                        <input type="date" class="form-control" name="due_date" value="${this.dataset.due_date}" required>
+                    </div>
                 </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="edit_return_date" class="form-label">Return Date</label>
+                        <input type="date" min="<?= date('Y-m-d') ?>" class="form-control" name="return_date" value="${this.dataset.return_date}">
+                    </div>
 
-                <div class="mb-3">
-                    <label for="edit_due_date" class="form-label">Due Date</label>
-                    <input type="date" class="form-control" name="due_date" value="${this.dataset.due_date}" required>
+                    <div class="mb-3 col-md-6">
+                        <label for="edit_fine_amount" class="form-label">Fine Amount</label>
+                        <input type="number" class="form-control" name="fine_amount" value="${this.dataset.fine_amount ?? 0}">
+                    </div>
                 </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="edit_status" class="form-label">Status</label>
+                        <select class="form-select" name="status" id="edit_status">
+                            <option value="0" ${this.dataset.status == 0 ? 'selected' : ''}>Issued</option>
+                            <option value="1" ${this.dataset.status == 1 ? 'selected' : ''} selected>Returned</option>
+                        </select>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="edit_return_date" class="form-label">Return Date</label>
-                    <input type="date" class="form-control" name="return_date" value="${this.dataset.return_date ?? ''}"  readonly>
-                </div>
-
-                <div class="mb-3">
-                    <label for="edit_fine_amount" class="form-label">Fine Amount</label>
-                    <input type="number" class="form-control" name="fine_amount" value="${this.dataset.fine_amount ?? 0}">
-                </div>
-
-                <div class="mb-3">
-                    <label for="edit_status" class="form-label">Status</label>
-                    <select class="form-select" name="status" id="edit_status">
-                        <option value="0" ${this.dataset.status == 0 ? 'selected' : ''}>Issued</option>
-                        <option value="1" ${this.dataset.status == 1 ? 'selected' : ''} selected>Returned</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="edit_is_approved" class="form-label">Approved</label>
-                    <select class="form-select" name="is_approved" id="edit_is_approved">
-                        <option value="0" ${this.dataset.is_approved == 0 ? 'selected' : ''}>No</option>
-                        <option value="1" ${this.dataset.is_approved == 1 ? 'selected' : ''} selected>Yes</option>
-                    </select>
+                    <div class="mb-3 col-md-6">
+                        <label for="edit_is_approved" class="form-label">Approved</label>
+                        <select class="form-select" name="is_approved" id="edit_is_approved">
+                            <option value="0" ${this.dataset.is_approved == 0 ? 'selected' : ''}>No</option>
+                            <option value="1" ${this.dataset.is_approved == 1 ? 'selected' : ''} selected>Yes</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" action="<?= $url->url('/issue-books/update'); ?>" name="update_issue_book" class="btn btn-primary">Update Book Issue</button>
+                    <button type="submit" name="update_issue_book" class="btn btn-primary">Update Book Issue</button>
                 </div>
                 </form>
             `;

@@ -103,6 +103,7 @@ class CustomerSubscriptionsController extends Controller {
         // Sanitize and validate inputs
         $id = isset($_POST['id']) ? (int) $_POST['id'] : null;
         $due_date = $_POST['due_date'] ?? null;
+        $return_date = isset($_POST['return_date']) ? $_POST['return_date'] : null;
         $fine_amount = isset($_POST['fine_amount']) ? floatval($_POST['fine_amount']) : 0;
         $status = isset($_POST['status']) && $_POST['status'] == 1 ? '1' : '0';
         $is_approved = isset($_POST['is_approved']) ? ($_POST['is_approved'] == 1 ? '1' : '0') : '0';
@@ -116,6 +117,7 @@ class CustomerSubscriptionsController extends Controller {
         $data = [
             'id' => $id,
             'due_date' => $due_date,
+            'return_date' => $return_date,
             'fine_amount' => $fine_amount,
             'status' => $status,
             'is_approved' => $is_approved,

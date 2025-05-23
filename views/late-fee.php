@@ -87,7 +87,7 @@ require_once 'layouts/navbar.php';
                                             <td><?= htmlspecialchars($subs->issue_date) ?></td>
                                             <td><?= htmlspecialchars($subs->due_date) ?></td>
                                             <td><?= htmlspecialchars($subs->return_date) ?></td>
-                                            <td><?= htmlspecialchars($subs->total_due_days) ?></td>
+                                            <td><?= htmlspecialchars($subs->total_due_days ?? 0) ?></td>
                                             <td><?= number_format($subs->total_fine_amount, 2) ?> ৳</td>
                                         </tr>
                                     <?php endforeach; ?>

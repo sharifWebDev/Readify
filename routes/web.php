@@ -152,3 +152,16 @@ if ($rootPath === '/members/store' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
+
+require_once '../controllers/CategoryController.php';
+$CategoryController = new CategoryController();
+
+if ($rootPath === '/categories' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+   $CategoryController->index();
+}
+if ($rootPath === '/category/store' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+   $CategoryController->store();
+}
+
+
+

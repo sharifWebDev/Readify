@@ -6,7 +6,7 @@ class Members extends Model {
     public function index() {
         try {
             $stmt = $this->db->prepare("
-                SELECT * FROM members
+                SELECT * FROM members ORDER by id DESC
             ");
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_OBJ);

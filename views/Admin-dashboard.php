@@ -89,7 +89,7 @@
 
                     </div>
 
-                    <a href="/admin-logs" class="btn btn-outline-secondary mt-3">View Admin Logs</a>
+                    <a href="#" class="btn btn-outline-secondary mt-3" onclick="alert('This feature is not available yet.');">View Admin Logs</a>
                 </div>
             </div>
         </div>
