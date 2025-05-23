@@ -164,4 +164,15 @@ if ($rootPath === '/category/store' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
+require_once '../controllers/AuthorController.php';
+$AuthorController = new AuthorController();
+
+if ($rootPath === '/authors' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+   $AuthorController->index();
+}
+if ($rootPath === '/author/store' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+   $AuthorController->store();
+}
+
+
 
