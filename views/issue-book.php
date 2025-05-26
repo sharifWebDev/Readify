@@ -82,7 +82,7 @@
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#editBookIssueModal"
                                                 >
-                                                    Edit
+                                                   Return Book Or Update Book Issue
                                                 </a>
 
                                                 </td>
@@ -159,7 +159,7 @@
                 <div class="modal-content">
                     <form method="POST" action="<?= $url->url('/issue-books/update'); ?>">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editBookIssueModalLabel">Update Book Issue</h5>
+                            <h5 class="modal-title" id="editBookIssueModalLabel">Return Book / Update Book Issue</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">

@@ -60,7 +60,7 @@ if (isset($_SESSION['admin'])) {
             <input type="hidden" name="token" value="<?= CSRF::generateToken(); ?>">
 
             <div class="mb-3">
-                <label for="email" class="form-label">email</label>
+                <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
                 <div class="invalid-feedback">
                     Please enter your email.
